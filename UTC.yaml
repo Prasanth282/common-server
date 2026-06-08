@@ -63,7 +63,7 @@
 
    - name: installing mongodb client package 
      ansible.builtin.dnf:
-      name: mongodb-mongosh -y
+      name: mongodb-mongosh
       state: present
 
    - name: checking data loaded to db server or not 
