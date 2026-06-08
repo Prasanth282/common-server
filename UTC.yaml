@@ -56,7 +56,7 @@
       state: started
       enabled: yes
 
-   - name: copying mongo.reo to install the mongodb clinet package 
+   - name: copying mongo.repo to install the mongodb client package 
      ansible.builtin.copy:
       src: mongo.repo
       dest: /etc/yum.repos.d/mongo.repo
