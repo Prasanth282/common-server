@@ -1,5 +1,5 @@
 - name: configuring catalogue
-  hosts: catalogue
+  hosts: CUC
   become: yes
   tasks:
    - name: disabling the nodejs 
@@ -9,14 +9,14 @@
      ansible.builtin.command:  dnf modue enable nodejs:20
    
    - name: installing nodejs 
-     ansible.builtin.package: 
+     ansible.builtin.dnf: 
       name: nodejs
-      state: present 
+      state: installed 
 
    - name: creating dedicated directory for system user 
      ansible.builtin.file:
-     path: /app_catalogue
-     state: directory 
+      path: /app_catalogue
+      state: directory 
 
    - name: creating system user to run the nodejs application 
      ansible.builtin.user:
@@ -58,8 +58,8 @@
 
    - name: copying mongo.reo to install the mongodb clinet package 
      ansible.builtin.copy:
-     src: mongo.repo
-     dest: /etc/yum.repos.d/mongo.repo
+      src: mongo.repo
+      dest: /etc/yum.repos.d/mongo.repo
 
    - name: installing mongodb client package 
      ansible.builtin.package:
@@ -81,7 +81,7 @@
 ---
 
 - name: configuring user
-  hosts: user
+  hosts: CUC
   become: yes
   tasks:
    - name: disabling the nodejs 
@@ -123,8 +123,9 @@
       path: /app
 
    - name: copying the user serrvice
-     src: user.service
-     dest: /etc/systemd/system/user.service
+     ansible.builtin.copy:
+      src: user.service
+      dest: /etc/systemd/system/user.service
 
    - name: daemon reload for service
      ansible.builtin.systemd_service:
@@ -147,7 +148,7 @@
 
 
 - name: configuring cart
-  hosts: cart
+  hosts: CUC
   become: yes
   tasks: 
    - name: disabling the nodejs 
