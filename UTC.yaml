@@ -1,0 +1,221 @@
+- name: configuring catalogue
+  hosts: catalogue
+  become: yes
+  tasks:
+   - name: disabling the nodejs 
+     ansible.builtin.command:  dnf module disable nodejs
+
+   - name: enabling nodejs:20 
+     ansible.builtin.command:  dnf modue enable nodejs:20
+   
+   - name: installing nodejs 
+     ansible.builtin.package: 
+      name: nodejs
+      state: present 
+
+   - name: creating dedicated directory for system user 
+     ansible.builtin.file:
+     path: /app_catalogue
+     state: directory 
+
+   - name: creating system user to run the nodejs application 
+     ansible.builtin.user:
+      name: roboshop
+      system: yes
+      home: /app_catalogue
+      shell: /sbin/nologin
+
+   - name: downloading the packages from url 
+     ansible.builtin.get_url:
+      url: https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip
+      dest: /tmp/catalogue.zip
+    
+   - name: unzipping the package in user home directory path #if we provide unarchieve module it will think the mentioned zipfile placed in the ansible server itself 
+     #  so we have to provide remote_src: yes - it will tell the module to mentioned file present in the remote host 
+     ansible.builtin.unarchive:
+      src: /tmp/catalogue.zip
+      dest: /app_catalogue
+      remote_src: yes 
+
+   - name: installing dependencies for nodejs \
+     community.genral.npm: 
+      path: /app_catalogue
+
+   - name: copying the catalogue.service
+     ansible.builtin.copy:
+      src: catalogue.service
+      dest: /etc/systemd/system/catalogue.service
+
+   - name: system daemon reload for updating the service 
+     ansible.builtin.systemd_service:  # for systemd reload we have a dedicated module 
+      daemon_reload: true
+
+   - name: enabling and starting the catalogue.service
+     ansible.builtin.service:
+      name: catalogue
+      state: started
+      enabled: yes
+
+   - name: copying mongo.reo to install the mongodb clinet package 
+     ansible.builtin.copy:
+     src: mongo.repo
+     dest: /etc/yum.repos.d/mongo.repo
+
+   - name: installing mongodb client package 
+     ansible.builtin.package:
+      name: mongodb-mongosh -y
+      state: present
+
+   - name: checking data loaded to db server or not 
+     ansible.builtin.command: mongosh --host mongodb.daws84s.site --eval 'db.getMongo().getDBNames().indexOf("catalogue")'
+     register: command_output
+
+   - name: checking data loaded or not \
+     ansible.builtin.debug:
+      msg: "{{ command_output }}" 
+
+   - name: load the data 
+     ansible.builtin.shell: mongosh --host mongodb.daws84s.site < /app/db/master-data.js
+     when: command_output.stdout | int < 0  # the data will load when the stdout value -1 the data is not present, more than -1 means data present 
+      
+---
+
+- name: configuring user
+  hosts: user
+  become: yes
+  tasks:
+   - name: disabling the nodejs 
+     ansible.builtin.command:  dnf module disable nodejs
+
+   - name: enabling nodejs:20 
+     ansible.builtin.command:  dnf modue enable nodejs:20
+   
+   - name: installing nodejs 
+     ansible.builtin.package: 
+      name: nodejs
+      state: present 
+
+   - name: creating a directory for syatem user
+     ansible.builtin.file:
+      path: /app_user
+      state: directory
+
+   - name: creating system user to run application
+     ansible.builtin.user:
+      name: roboshop
+      home: /app_user
+      shell: /sbin/nologin
+      system: true
+
+   - name: downloading the devolement files from url 
+     ansible.builtin.get_url:
+      url: https://roboshop-artifacts.s3.amazonaws.com/user-v3.zip
+      dest: /tmp/user.zip
+
+   - name: unzipping the file 
+     ansible.builtin.unarchieve:
+      src: /tmp/user.zip
+      dest: /app_user
+      remote_src: yes
+
+   - name: installing dependencies 
+     community.genral.npm:
+      path: /app
+
+   - name: copying the user serrvice
+     src: user.service
+     dest: /etc/systemd/system/user.service
+
+   - name: daemon reload for service
+     ansible.builtin.systemd_service:
+      daemon_reload: true
+
+   - name: enabling and starting the user
+     ansible.builtin.service:
+      name: user
+      state: started
+      enabled: yes 
+
+   - name: creating cart service
+     ansible.builtin.copy:
+      src: user.service
+      dest: /etc/systemd/system/cart.service
+
+   - name: system user reload 
+     ansible.builtin.systemd_reload:
+      daemon_reload: true 
+
+
+- name: configuring cart
+  hosts: cart
+  become: yes
+  tasks: 
+   - name: disabling the nodejs 
+     ansible.builtin.command:  dnf module disable nodejs
+
+   - name: enabling nodejs:20 
+     ansible.builtin.command:  dnf modue enable nodejs:20
+   
+   - name: installing nodejs 
+     ansible.builtin.package: 
+      name: nodejs
+      state: present 
+
+   - name: creating a directory for syatem user
+     ansible.builtin.file:
+      path: /app_cart
+      state: directory
+
+   - name: creating system user to run application
+     ansible.builtin.user:
+      name: roboshop
+      home: /app_cart
+      shell: /sbin/nologin
+      system: true
+
+   - name: downloading the devolement files from url 
+     ansible.builtin.get_url:
+      url: https://roboshop-artifacts.s3.amazonaws.com/cart-v3.zip
+      dest: /tmp/cart.zip
+
+   - name: unzipping the code 
+     ansible.builtin.unarchieve:
+      src: /tmp/cart.zip
+      dest: /app_cart
+      remote_src: yes
+
+   - name: install dependencies
+     community.genral.npm:
+      path: /app_cart
+
+   - name: copying cart service 
+     ansible.builtin.copy:
+      src: cart.service
+      dest: /etc/syatemd/system/cart.service
+
+   - name: ssytemd daemon reload
+     ansible.builtin.systemd_service:
+      daemon_reload: true 
+
+   - name: enabling and starting service
+     ansible.builtin.service:
+      name: cart
+      state: started
+      enabled: yes 
+
+
+   
+
+   
+
+
+       
+        
+
+
+
+   
+
+   
+
+   
