@@ -37,8 +37,8 @@
       dest: /app_catalogue
       remote_src: yes 
 
-   - name: installing dependencies for nodejs \
-     community.genral.npm: 
+   - name: installing dependencies for nodejs 
+     community.general.npm: 
       path: /app_catalogue
 
    - name: copying the catalogue.service
@@ -118,7 +118,7 @@
       remote_src: yes
 
    - name: installing dependencies 
-     community.genral.npm:
+     community.general.npm:
       path: /app
 
    - name: copying the user serrvice
@@ -185,7 +185,7 @@
       remote_src: yes
 
    - name: install dependencies
-     community.genral.npm:
+     community.general.npm:
       path: /app_cart
 
    - name: copying cart service 
