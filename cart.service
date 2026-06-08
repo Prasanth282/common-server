@@ -5,7 +5,7 @@ User=roboshop
 // highlight-start
 Environment=REDIS_HOST=172.31.39.247
 Environment=CATALOGUE_HOST=172.31.37.24
-Environment=CATALOGUE_PORT=8080
+Environment=CATALOGUE_PORT=8081
 // highlight-end
 ExecStart=/bin/node /app/server.js
 SyslogIdentifier=cart
