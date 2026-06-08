@@ -21,14 +21,14 @@
       
    - name: remove the html directory 
      ansible.builtin.file:
-     name: /usr/share/nginx/html
-     state: ansent 
+      name: /usr/share/nginx/html
+      state: ansent 
 
    
    - name: creating the html directory 
      ansible.builtin.file:
-     name: /usr/share/nginx/html
-     state: directory 
+      name: /usr/share/nginx/html
+      state: directory 
 
    - name: downloading the frontend code 
      ansible.builtin.get_url:
@@ -37,9 +37,9 @@
 
    - name: unzipping the frontend content 
      ansible.builtin.unarchieve:
-     src: /tmp/frontend.zip
-     dest: /usr/share/nginx/html
-     remote_src: yes
+      src: /tmp/frontend.zip
+      dest: /usr/share/nginx/html
+      remote_src: yes
   
    - name: removing existing nginx configuration file 
      ansible.builtin.file:
