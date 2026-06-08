@@ -75,7 +75,7 @@
       msg: "{{ command_output }}" 
 
    - name: load the data 
-     ansible.builtin.shell: mongosh --host 172.31.45.31 < /app/db/master-data.js
+     ansible.builtin.shell: mongosh --host 172.31.45.31 < /app_catalogue/db/master-data.js
      when: command_output.stdout | int < 0  # the data will load when the stdout value -1 the data is not present, more than -1 means data present 
       
 
