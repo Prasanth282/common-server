@@ -119,7 +119,7 @@
 
    - name: installing dependencies 
      community.general.npm:
-      path: /app
+      path: /app_user
 
    - name: copying the user service
      ansible.builtin.copy:
