@@ -3,10 +3,10 @@
   become: yes
   tasks:
    - name: disabling the nodejs 
-     ansible.builtin.command:  dnf module disable nodejs
+     ansible.builtin.command:  dnf module disable nodejs -y
 
    - name: enabling nodejs:20 
-     ansible.builtin.command:  dnf modue enable nodejs:20
+     ansible.builtin.command:  dnf modue enable nodejs:20 -y
    
    - name: installing nodejs 
      ansible.builtin.dnf: 
@@ -84,10 +84,10 @@
   become: yes
   tasks:
    - name: disabling the nodejs 
-     ansible.builtin.command:  dnf module disable nodejs
+     ansible.builtin.command:  dnf module disable nodejs -y
 
    - name: enabling nodejs:20 
-     ansible.builtin.command:  dnf modue enable nodejs:20
+     ansible.builtin.command:  dnf modue enable nodejs:20 -y
    
    - name: installing nodejs 
      ansible.builtin.package: 
@@ -121,7 +121,7 @@
      community.general.npm:
       path: /app
 
-   - name: copying the user serrvice
+   - name: copying the user service
      ansible.builtin.copy:
       src: user.service
       dest: /etc/systemd/system/user.service
@@ -151,10 +151,10 @@
   become: yes
   tasks: 
    - name: disabling the nodejs 
-     ansible.builtin.command:  dnf module disable nodejs
+     ansible.builtin.command:  dnf module disable nodejs -y
 
    - name: enabling nodejs:20 
-     ansible.builtin.command:  dnf modue enable nodejs:20
+     ansible.builtin.command:  dnf modue enable nodejs:20 -y
    
    - name: installing nodejs 
      ansible.builtin.package: 
@@ -191,7 +191,7 @@
    - name: copying cart service 
      ansible.builtin.copy:
       src: cart.service
-      dest: /etc/syatemd/system/cart.service
+      dest: /etc/systemd/system/cart.service
 
    - name: ssytemd daemon reload
      ansible.builtin.systemd_service:
