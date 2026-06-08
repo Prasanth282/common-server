@@ -112,7 +112,7 @@
       dest: /tmp/user.zip
 
    - name: unzipping the file 
-     ansible.builtin.unarchieve:
+     ansible.builtin.unarchive:
       src: /tmp/user.zip
       dest: /app_user
       remote_src: yes
@@ -179,7 +179,7 @@
       dest: /tmp/cart.zip
 
    - name: unzipping the code 
-     ansible.builtin.unarchieve:
+     ansible.builtin.unarchive:
       src: /tmp/cart.zip
       dest: /app_cart
       remote_src: yes
